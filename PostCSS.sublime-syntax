@@ -1,236 +1,382 @@
 %YAML 1.2
 ---
-# http://www.sublimetext.com/docs/syntax.html
 name: PostCSS
 scope: source.postcss
+version: 2
+
+extends: Packages/CSS/CSS.sublime-syntax
 
 file_extensions:
   - pcss
   - postcss
 
+variables:
+  ident_start: (?:{{nmstart}}|\$\()
+
+  # Properties and Selectors
+  property_or_selector_begin: (?={{ident_begin}}|{{selector_start}})
+  property_end: (?=[;@)}])
+
+  selector_start: '[[:alpha:].:#&*\[{{combinator_char}}]'
+  selector_end: (?=[;@(){}])
+
 contexts:
+
+###[ CSS ]#####################################################################
+
   main:
-    - match: /\*
+    # keep `source.postcss` main scope for compatibility with other packages
+    # but add another `source.css.postcss` scope to share preferences with CSS.
+    - meta_prepend: true
+    - meta_scope: source.css.postcss
+
+  stylesheet:
+    # required until ST4174 (PR #3898)
+    - include: postcss-variable-definitions
+    - include: postcss-variables
+    - include: comments
+    - include: property-lists
+    - include: properties-or-selectors  # lazily match properties everywhere
+    - include: at-rules
+    - include: rule-terminators
+    - include: illegal-commas
+    - include: illegal-groups
+
+###[ CSS COMMENTS ]############################################################
+
+  comments:
+    - meta_append: true
+    - include: postcss-line-comments
+
+  block-comment-body:
+    - meta_prepend: true
+    - include: postcss-interpolations
+
+###[ CSS AT RULES ]############################################################
+
+  at-counter-style-definition-list-body:
+    - meta_prepend: true
+    - include: postcss-variable-definitions
+    - include: postcss-variables
+
+  at-other:
+    - meta_prepend: true
+    # known PostCSS at rules
+    - include: postcss-at-apply
+    - include: postcss-at-each
+    - include: postcss-at-functions
+    - include: postcss-at-mixins
+    - include: postcss-at-return
+    - include: postcss-at-other
+
+###[ CSS SELECTORS ]###########################################################
+
+  properties-or-selectors:
+    # required until ST4174 (PR #3898)
+    - include: custom-properties
+    - match: '{{property_or_selector_begin}}'
+      branch_point: property-or-selector
+      branch:
+        - maybe-property
+        - selector-body
+
+  maybe-property:
+    # required until ST4174 (PR #3898)
+    - meta_include_prototype: false
+    - include: property-end
+    - include: property-identifiers
+    - match: ''
+      fail: property-or-selector
+
+  property-end:
+    # required until ST4174 (PR #3898)
+    - match: '{{property_end}}'
+      pop: 1
+
+  selector-variables:
+    # required until ST4174 (PR #3898)
+    - meta_prepend: true
+    - match: \&
+      scope: variable.language.parent.css
+
+###[ CSS PROPERTY LISTS ]######################################################
+
+  maybe-property-list:
+    # required until ST4174 (PR #3831)
+    - meta_include_prototype: false
+    - match: \{
+      scope: punctuation.section.block.begin.css
+      set: property-list-body
+    - include: comments
+    - include: else-pop
+
+  property-list-body:
+    # required until ST4174 (PR #3898)
+    - meta_scope: meta.property-list.css meta.block.css
+    - meta_include_prototype: false
+    - include: block-end
+    - include: stylesheet
+
+  illegal-commas:
+    # required until ST4174 (PR #3831)
+    - match: ','
+      scope: invalid.illegal.unexpected-token.css
+
+###[ CSS PROTOTYPES ]##########################################################
+
+  function-arguments-prototype:
+    - meta_prepend: true
+    - include: postcss-variables
+
+  identifier-content:
+    - meta_prepend: true
+    - include: postcss-interpolations
+
+  string-content:
+    - meta_prepend: true
+    - include: postcss-string-interpolations
+
+  values:
+    - meta_prepend: true
+    - include: postcss-variables
+
+###[ POSTCSS COMMENTS ]########################################################
+
+  postcss-line-comments:
+    - match: /{2}
+      scope: punctuation.definition.comment.postcss
+      push: postcss-line-comments-body
+
+  postcss-line-comments-body:
+    - meta_scope: comment.line.double-slash.postcss
+    - match: $\n?
+      pop: 1
+    - include: postcss-interpolations
+
+###[ POSTCSS APPLY AT RULES ]##################################################
+
+  # https://github.com/pascalduez/postcss-apply
+  postcss-at-apply:
+    - match: (@)apply{{break}}
+      captures:
+        0: keyword.control.directive.apply.postcss
+        1: punctuation.definition.keyword.postcss
+      push: postcss-at-apply-content
+
+  postcss-at-apply-content:
+    - meta_include_prototype: false
+    - meta_scope: meta.at-rule.apply.postcss
+    - match: '{{custom_ident_begin}}'
+      push: custom-property-variable-content
+    - match: \.
+      scope: punctuation.definition.entity.css
+      push: selector-class-identifier-content
+    - include: values
+
+###[ POSTCSS EACH AT-RULE ]####################################################
+
+  # https://github.com/postcss/postcss-nested
+  postcss-at-each:
+    - match: (@)each{{break}}
+      captures:
+        0: keyword.control.loop.each.postcss
+        1: punctuation.definition.keyword.postcss
+      push: postcss-at-each-content
+
+  postcss-at-each-content:
+    - meta_include_prototype: false
+    - meta_scope: meta.at-rule.each.postcss
+    - match: in{{break}}
+      scope: keyword.operator.iterator.postcss
+    - include: values
+
+###[ POSTCSS DEFINE-FUNCTION AT-RULE ]#########################################
+
+  # https://github.com/mcattx/postcss-define-function
+  postcss-at-functions:
+    - match: (@)define-function{{break}}
+      scope: meta.function.postcss keyword.control.directive.function.postcss
+      captures:
+        1: punctuation.definition.keyword.postcss
       push:
-        - meta_scope: comment.block.postcss
-        - match: \*/
-          pop: true
-        - include: comment-tag
-    - include: double-slash
-    - include: double-quoted
-    - include: single-quoted
-    - include: interpolation
-    - include: placeholder-selector
-    - include: variable
-    - include: variable-root-css
-    - include: numeric
-    - include: unit
-    - include: flag
-    - include: dotdotdot
-    - match: '@include'
-      scope: keyword.control.at-rule.css.postcss
+        - postcss-at-function-meta
+        - maybe-property-list
+        - postcss-at-function-parameter-list
+        - postcss-at-function-name
+    - match: (@)callFn{{break}}
+      scope: meta.at-rule.function-call.postcss keyword.control.directive.postcss
+      captures:
+        1: punctuation.definition.keyword.postcss
+
+  postcss-at-function-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.at-rule.function.postcss
+    - include: immediately-pop
+
+  postcss-at-function-name:
+    - meta_include_prototype: false
+    - match: '{{ident_begin}}'
+      set: postcss-at-function-name-content
+    - include: comments
+    - include: else-pop
+
+  postcss-at-function-name-content:
+    - meta_scope: entity.name.function.postcss
+    - include: identifier-content
+
+  postcss-at-function-parameter-list:
+    - meta_include_prototype: false
+    - meta_content_scope: meta.function.identifier.postcss
+    - match: \(
+      scope: punctuation.section.group.begin.postcss
+      set: postcss-at-function-parameter-list-body
+    - include: comments
+    - include: else-pop
+
+  postcss-at-function-parameter-list-body:
+    - meta_include_prototype: false
+    - meta_scope: meta.function.parameters.postcss meta.group.postcss
+    - include: group-end
+    - include: comments
+    - include: comma-delimiters
+    - include: postcss-parameters
+
+###[ POSTCSS MIXIN AT-RULE ]###################################################
+
+  # https://github.com/postcss/postcss-mixins
+  postcss-at-mixins:
+    - match: (@)define-mixin{{break}}
+      scope: keyword.control.directive.mixin.postcss
+      captures:
+        1: punctuation.definition.keyword.postcss
       push:
-        - meta_scope: support.function.name.postcss.library
-        - match: '(?=\n|\(|{|;)'
-          scope: keyword.control.at-rule.css.postcss
-          pop: true
-    - match: '@mixin|@function'
-      scope: keyword.control.at-rule.css.postcss
-      push:
-        - meta_scope: support.function.name.postcss.no-completions
-        - match: '$\n?|(?=\(|{)'
-          scope: keyword.control.at-rule.css.postcss
-          pop: true
-        - match: '[\w-]+'
-          scope: entity.name.function
-    - match: '(?<=@import)\s[\w/.*-]+'
-      scope: string.quoted.double.css.postcss
-    - match: '@'
-      push:
-        - meta_scope: keyword.control.at-rule.css.postcss
-        - match: $\n?|\s(?!(all|braille|embossed|handheld|print|projection|screen|speech|tty|tv|if|only|not)(\s|,))|(?=;)
-          pop: true
-    - match: '#'
-      push:
-        - meta_scope: entity.other.attribute-name.id.css.postcss
-        - match: '$\n?|(?=\s|,|;|\(|\)|\.|\[|{|>)'
-          pop: true
-        - include: interpolation
-        - include: pseudo-class
-    - match: \.|(?<=&)(-|_)
-      push:
-        - meta_scope: entity.other.attribute-name.class.css.postcss
-        - match: '$\n?|(?=\s|,|;|\(|\)|\[|{|>)'
-          pop: true
-        - include: interpolation
-        - include: pseudo-class
-    - match: '\['
-      push:
-        - meta_scope: entity.other.attribute-selector.postcss
-        - match: '\]'
-          pop: true
-        - include: double-quoted
-        - include: single-quoted
-        - match: \^|\$|\*|~
-          scope: keyword.other.regex.postcss
-    - match: '(?<=\]|\)|not\(|\*|>|>\s):[a-z:-]+|(::|:-)[a-z:-]+'
-      scope: entity.other.attribute-name.pseudo-class.css.postcss
+        - postcss-at-mixin-parameter-list
+        - postcss-at-mixin-name
+
+  postcss-at-mixin-name:
+    - meta_include_prototype: false
+    - match: '{{ident_begin}}'
+      set: postcss-at-mixin-name-content
+    - include: comments
+    - include: else-pop
+
+  postcss-at-mixin-name-content:
+    - meta_scope: entity.name.trait.mixin.postcss
+    - include: identifier-content
+
+  postcss-at-mixin-parameter-list:
+    - meta_include_prototype: false
+    - meta_scope: meta.at-rule.mixin.postcss
+    - include: postcss-parameters
+    - include: values
+
+  postcss-parameters:
+    # mixin parameter definitions
+    - match: (\$){{ident}}
+      scope: meta.parameter.identifier.postcss variable.parameter.postcss
+      captures:
+        1: punctuation.definition.variable.postcss
     - match: ':'
+      scope: meta.parameter.postcss punctuation.separator.key-value.css
+      push: postcss-parameter-value
+
+  postcss-parameter-value:
+    - meta_content_scope: meta.parameter.value.postcss
+    - match: ','
+      scope: punctuation.separator.sequence.css
+      pop: 1
+    - include: values
+
+###[ POSTCSS RETURN AT-RULE ]##################################################
+
+  # https://github.com/mcattx/postcss-define-function
+  postcss-at-return:
+    - match: (@)return{{break}}
+      scope: keyword.control.flow.return.postcss
+      captures:
+        1: punctuation.definition.keyword.postcss
+      push: postcss-at-return-value
+
+  postcss-at-return-value:
+    - meta_scope: meta.at-rule.return.postcss
+    - match: '[-+*/]'
+      scope: keyword.operator.arithmetic.postcss
+    - include: values
+
+###[ POSTCSS OTHER AT-RULE ]###################################################
+
+  postcss-at-other:
+    # support identifiers after unknown at-rules
+    - match: (@)[A-Za-z][0-9A-Za-z_-]*{{break}}
+      scope: keyword.control.directive.postcss
+      captures:
+        1: punctuation.definition.keyword.postcss
       push:
-        - meta_scope: meta.property-list.css.postcss
-        - match: '$\n?|(?=;|\s\(|and\(|{|}|\),)'
-          pop: true
-        - include: double-slash
-        - include: double-quoted
-        - include: single-quoted
-        - include: interpolation
-        - include: variable
-        - include: rgb-value
-        - include: numeric
-        - include: unit
-        - include: flag
-        - include: function
-        - include: function-content
-        - include: function-content-var
-        - include: operator
-        - include: parent-selector
-        - include: property-value
-    - include: rgb-value
-    - include: function
-    - include: function-content
-    - match: '(?<!\-|\()\b(a|abbr|acronym|address|applet|area|article|aside|audio|b|base|big|blockquote|body|br|button|canvas|caption|cite|code|col|colgroup|datalist|dd|del|details|dfn|dialog|div|dl|dt|em|embed|eventsource|fieldset|figure|figcaption|footer|form|frame|frameset|(h[1-6])|head|header|hgroup|hr|html|i|iframe|img|input|ins|kbd|label|legend|li|link|map|mark|menu|meta|meter|nav|noframes|noscript|object|ol|optgroup|option|output|p|param|picture|pre|progress|q|samp|script|section|select|small|source|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|tt|ul|var|video|main|svg|rect|ruby|center|circle|ellipse|line|polyline|polygon|path|text|u|x)\b(?!-|\)|:\s)|&'
-      push:
-        - meta_scope: entity.name.tag.css.postcss.symbol
-        - match: '(?=\s|,|;|\(|\)|\.|\[|{|>|-|_)'
-          pop: true
-        - include: interpolation
-        - include: pseudo-class
-    - include: operator
-    - match: '[a-z-]+((?=:|#{))'
-      scope: support.type.property-name.css.postcss
-    - include: reserved-words
-    - include: property-value
+        - postcss-at-other-body
+        - postcss-at-other-name
 
-  comment-tag:
-    - match: '{{'
-      push:
-        - meta_scope: comment.tags.postcss
-        - match: '}}'
-          pop: true
-        - match: '[\w-]+'
-          scope: comment.tag.postcss
+  postcss-at-other-name:
+    - meta_include_prototype: false
+    - match: '{{ident_begin}}'
+      set: postcss-at-other-name-content
+    - include: comments
+    - include: else-pop
 
-  dotdotdot:
-    - match: '\.{3}'
-      scope: variable.other
+  postcss-at-other-name-content:
+    - meta_scope: entity.other.postcss
+    - include: identifier-content
 
-  double-quoted:
-    - match: '"'
-      push:
-        - meta_scope: string.quoted.double.css.postcss
-        - match: '"'
-          pop: true
-        - include: quoted-interpolation
+  postcss-at-other-body:
+    - meta_include_prototype: false
+    - meta_scope: meta.at-rule.other.postcss
+    - include: values
 
-  double-slash:
-    - match: //
-      push:
-        - meta_scope: comment.line.postcss
-        - match: $
-          pop: true
-        - include: comment-tag
+###[ POSTCSS INTERPOLATIONS ]##################################################
 
-  flag:
-    - match: '!(important|default|optional|global)'
-      scope: keyword.other.important.css.postcss
+  postcss-interpolations:
+    - match: \$\(
+      scope: punctuation.section.interpolation.begin.postcss
+      push: postcss-interpolation-body
 
-  function:
-    - match: '(?<=[\s|\(|,|:])(?!url|format|attr)[\w-][\w-]*(?=\()'
-      scope: support.function.name.postcss
+  postcss-interpolation-body:
+    - meta_scope: meta.interpolation.postcss
+    - match: \)
+      scope: punctuation.section.interpolation.end.postcss
+      pop: 1
+    - match: '{{ident_begin}}'
+      push: postcss-variable-content
 
-  function-content:
-    - match: (?<=url\(|format\(|attr\().+?(?=\))
-      scope: string.quoted.double.css.postcss
+  postcss-string-interpolations:
+    - match: \$\(
+      scope: punctuation.section.interpolation.begin.postcss
+      push: postcss-string-interpolation-body
 
-  function-content-var:
-    - match: '(?<=var\()[\w-]+(?=\))'
-      scope: variable.parameter.postcss
+  postcss-string-interpolation-body:
+    - clear_scopes: 1
+    - meta_scope: meta.interpolation.postcss
+    - include: postcss-interpolation-body
 
-  interpolation:
-    - match: '#{'
-      push:
-        - meta_scope: support.function.interpolation.postcss
-        - match: '}'
-          pop: true
-        - include: variable
-        - include: numeric
-        - include: operator
-        - include: unit
-        - include: double-quoted
-        - include: single-quoted
+###[ POSTCSS VARIABLES ]#######################################################
 
-  numeric:
-    - match: '(-|\.)?[0-9]+(\.[0-9]+)?'
-      scope: constant.numeric.css.postcss
+  # https://github.com/postcss/postcss-simple-vars
+  postcss-variable-definitions:
+    - match: (((\$){{ident}})\s*)(:)
+      captures:
+        1: meta.variable.identifier.postcss
+        2: variable.other.postcss
+        3: punctuation.definition.variable.postcss
+        4: meta.variable.postcss punctuation.separator.key-value.css
+      push: postcss-variable-value
 
-  operator:
-    - match: \+|\s-\s|\s-(?=\$)|(?<=\()-(?=\$)|\s-(?=\()|\*|/|%|=|!|<|>|~
-      scope: keyword.operator.postcss
+  postcss-variable-value:
+    - meta_content_scope: meta.variable.value.postcss
+    - include: values
 
-  parent-selector:
-    - match: '&'
-      scope: entity.name.tag.css.postcss
+  postcss-variables:
+    - match: \${{ident_begin}}
+      scope: punctuation.definition.variable.postcss
+      push: postcss-variable-content
 
-  placeholder-selector:
-    - match: (?<!\d)%(?!\d)
-      push:
-        - meta_scope: entity.other.attribute-name.placeholder-selector.postcss
-        - match: '$\n?|\s|(?=;|{)'
-          pop: true
-
-  property-value:
-    - match: '[\w-]+'
-      scope: meta.property-value.css.postcss, support.constant.property-value.css.postcss
-
-  pseudo-class:
-    - match: ':[a-z:-]+'
-      scope: entity.other.attribute-name.pseudo-class.css.postcss
-
-  quoted-interpolation:
-    - match: '#{'
-      push:
-        - meta_scope: support.function.interpolation.postcss
-        - match: '}'
-          pop: true
-        - include: variable
-        - include: numeric
-        - include: operator
-        - include: unit
-
-  reserved-words:
-    - match: \b(false|from|in|not|null|through|to|true)\b
-      scope: support.type.property-name.css.postcss
-
-  rgb-value:
-    - match: '(#)([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b'
-      scope: constant.other.color.rgb-value.css.postcss
-
-  single-quoted:
-    - match: "'"
-      push:
-        - meta_scope: string.quoted.single.css.postcss
-        - match: "'"
-          pop: true
-        - include: quoted-interpolation
-
-  unit:
-    - match: '(?<=[\d]|})(ch|cm|deg|dpcm|dpi|dppx|em|ex|grad|Hz|in|kHz|mm|ms|pc|pt|px|rad|rem|s|turn|vh|vmax|vmin|vw|%)'
-      scope: keyword.other.unit.css.postcss
-
-  variable:
-    - match: '\$[\w-]+'
-      scope: variable.parameter.postcss
-
-  variable-root-css:
-    - match: '(?<!&)--[\w-]+'
-      scope: variable.parameter.postcss
+  postcss-variable-content:
+    - meta_scope: variable.other.postcss
+    - include: identifier-content

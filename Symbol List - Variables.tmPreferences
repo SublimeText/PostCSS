@@ -2,7 +2,7 @@
 <plist version="1.0">
 <dict>
 	<key>scope</key>
-	<string>source.postcss meta.at-rule.mixin entity.name.trait.mixin</string>
+	<string>source.postcss meta.variable.identifier variable.other - variable punctuation.definition</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>

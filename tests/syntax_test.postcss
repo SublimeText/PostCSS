@@ -1,0 +1,453 @@
+// SYNTAX TEST "Packages/PostCSS/PostCSS.sublime-syntax"
+
+/* Comment $(var) interpolation */
+// <- comment.block.css punctuation.definition.comment.begin.css
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.css
+//         ^^^^^^ meta.interpolation.postcss
+//         ^^ punctuation.section.interpolation.begin.postcss
+//           ^^^ variable.other.postcss
+//              ^ punctuation.section.interpolation.end.postcss
+
+/*
+ * https://github.com/postcss/postcss-scss
+ */
+
+// line comments
+// <- comment.line.double-slash.postcss punctuation.definition.comment.postcss
+//^^^^^^^^^^^^^^ comment.line.double-slash.postcss
+
+// line $(var) interpolation
+// <- comment.line.double-slash.postcss punctuation.definition.comment.postcss
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line.double-slash.postcss
+//      ^^^^^^ meta.interpolation.postcss
+//      ^^ punctuation.section.interpolation.begin.postcss
+//        ^^^ variable.other.postcss
+//           ^ punctuation.section.interpolation.end.postcss
+
+/*
+ * unknown at-rules
+ */
+
+    @any name arg { color: red }
+//  ^^^^^^^^^^^^^^ meta.at-rule.other.postcss
+//  ^^^^ keyword.control.directive.postcss
+//  ^ punctuation.definition.keyword.postcss
+//       ^^^^ entity.other.postcss
+//            ^^^ support.constant.property-value.css
+//                ^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//                ^ punctuation.section.block.begin.css
+//                  ^^^^^ meta.property-name.css support.type.property-name.css
+//                       ^ punctuation.separator.key-value.css
+//                        ^^^^^ meta.property-value.css
+//                         ^^^ support.constant.color.w3c.standard.css
+//                             ^ punctuation.section.block.end.css
+
+    @at-rule na$(me) arg;
+//  ^^^^^^^^^^^^^^^^^^^^ meta.at-rule.other.postcss
+//  ^^^^^^^^ keyword.control.directive.postcss
+//  ^ punctuation.definition.keyword.postcss
+//           ^^^^^^^ entity.other.postcss
+//             ^^^^^ meta.interpolation.postcss
+//             ^^ punctuation.section.interpolation.begin.postcss
+//               ^^ variable.other.postcss
+//                 ^ punctuation.section.interpolation.end.postcss
+//                   ^^^ support.constant.property-value.css
+//                      ^ punctuation.terminator.rule.css
+
+    @123
+//  ^^^^^ - meta.at-rule - constant - keyword - punctuation
+
+    // at-rule with unicode keyword
+    @ℜ- ;
+//  ^^^^ meta.at-rule.other.css
+//      ^ - meta.at-rule
+//  ^^^ - keyword - punctuation
+//      ^ punctuation.terminator.rule.css
+
+    // at-rule with escaped unicode keyword
+    @\211C \7B- ;
+//  ^^^^^^^^^^^^ meta.at-rule.other.css
+//              ^ - meta.at-rule
+//  ^^^^^^^^^^^ - keyword - punctuation
+//              ^ punctuation.terminator.rule.css
+    @font-ℜ- ;
+//  ^^^^^^^^^  meta.at-rule.other.css
+//           ^ - meta.at-rule
+//  ^^^^^^^^ - keyword - punctuation
+//           ^ punctuation.terminator.rule.css
+
+/*
+ * https://github.com/postcss/postcss-simple-vars
+ */
+
+$dir:    top;
+//^^ meta.variable.identifier.postcss variable.other.postcss
+//  ^ meta.variable.postcss punctuation.separator.key-value.css
+//   ^^^^^^^ meta.variable.value.postcss
+//       ^^^ support.constant.property-value.css
+//          ^ punctuation.terminator.rule.css
+$blue:   #056ef0;
+//^^^ meta.variable.identifier.postcss variable.other.postcss
+//   ^ meta.variable.postcss punctuation.separator.key-value.css
+//    ^^^^^^^^^^ meta.variable.value.postcss
+//       ^^^^^^^ constant.other.color.rgb-value.css
+//       ^ punctuation.definition.constant.css
+//              ^ punctuation.terminator.rule.css
+$column: 200px;
+//^^^^^ meta.variable.identifier.postcss variable.other.postcss
+//     ^ meta.variable.postcss punctuation.separator.key-value.css
+//      ^^^^^^ meta.variable.value.postcss
+//       ^^^^^ meta.number.integer.decimal.css
+//       ^^^ constant.numeric.value.css
+//          ^^ constant.numeric.suffix.css
+//            ^ punctuation.terminator.rule.css
+
+.menu_link {
+  background: $blue;
+//^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//          ^ punctuation.separator.key-value.css
+//           ^^^^^^ meta.property-value.css
+//            ^^^^^ variable.other.postcss
+//            ^ punctuation.definition.variable.postcss
+//                 ^ punctuation.terminator.rule.css
+  width: $column;
+//^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//^^^^^ meta.property-name.css support.type.property-name.css
+//     ^ punctuation.separator.key-value.css
+//      ^^^^^^^^ meta.property-value.css
+//       ^^^^^^^ variable.other.postcss
+//       ^ punctuation.definition.variable.postcss
+//              ^ punctuation.terminator.rule.css
+}
+
+.menu {
+  width: calc(4 * $column);
+//^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//^^^^^ meta.property-name.css support.type.property-name.css
+//     ^ punctuation.separator.key-value.css
+//      ^^^^^^^^^^^^^^^^^^ meta.property-value.css
+//       ^^^^ meta.function-call.identifier.css support.function.calc.css
+//           ^^^^^^^^^^^^^ meta.function-call.arguments.css meta.group.css
+//           ^ punctuation.section.group.begin.css
+//            ^ meta.number.integer.decimal.css constant.numeric.value.css
+//              ^ keyword.operator.arithmetic.css
+//                ^^^^^^^ variable.other.postcss
+//                       ^ punctuation.section.group.end.css
+//                        ^ punctuation.terminator.rule.css
+  margin-$(dir): 10px;
+//^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//^^^^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//       ^^^^^^ meta.interpolation.postcss
+//       ^^ punctuation.section.interpolation.begin.postcss
+//         ^^^ variable.other.postcss
+//            ^ punctuation.section.interpolation.end.postcss
+//             ^ punctuation.separator.key-value.css
+//              ^^^^^ meta.property-value.css
+//               ^^^^ meta.number.integer.decimal.css
+//               ^^ constant.numeric.value.css
+//                 ^^ constant.numeric.suffix.css
+//                   ^ punctuation.terminator.rule.css
+}
+
+/*
+ * https://github.com/pascalduez/postcss-apply
+ */
+
+:root {
+  --toolbar-theme: {
+//^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//^^^^^^^^^^^^^^^ meta.property-name.css entity.other.custom-property.css
+//               ^ punctuation.separator.key-value.css
+//                ^ meta.property-value.css
+//                 ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+    color: white;
+//^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//  ^^^^^ meta.property-name.css support.type.property-name.css
+//       ^ punctuation.separator.key-value.css
+//        ^^^^^^ meta.property-value.css
+//         ^^^^^ support.constant.color.w3c.standard.css
+//              ^ punctuation.terminator.rule.css
+  };
+//^^ meta.property-list.css meta.block.css
+//^ meta.property-list.css meta.block.css
+//^ punctuation.section.block.end.css
+// ^ punctuation.terminator.rule.css
+}
+// <- meta.property-list.css meta.block.css punctuation.section.block.end.css
+
+.Toolbar {
+    @apply --toolbar-theme .a-utility-class $variable constant;
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.css.postcss meta.property-list.css meta.block.css
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.apply.postcss
+//  ^^^^^^ keyword.control.directive.apply.postcss
+//  ^ punctuation.definition.keyword.postcss
+//         ^^^^^^^^^^^^^^^ variable.other.custom-property.css
+//                         ^^^^^^^^^^^^^^^^ entity.other.attribute-name.class.css
+//                         ^ punctuation.definition.entity.css
+//                                          ^^^^^^^^^ variable.other.postcss
+//                                          ^ punctuation.definition.variable.postcss
+//                                                    ^^^^^^^^ support.constant.property-value.css
+//                                                            ^ punctuation.terminator.rule.css
+}
+
+/*
+ * https://github.com/postcss/postcss-nested
+ */
+
+@each $val in primary, success, danger, warning {
+// <- meta.at-rule.each.postcss keyword.control.loop.each.postcss punctuation.definition.keyword.postcss
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.each.postcss
+// ^^ keyword.control.loop.each.postcss
+//    ^^^^ variable.other.postcss
+//         ^^ keyword.operator.iterator.postcss
+//            ^^^^^^^ support.constant.property-value.css
+//                   ^ punctuation.separator.sequence.css
+//                     ^^^^^^^ support.constant.property-value.css
+//                            ^ punctuation.separator.sequence.css
+//                              ^^^^^^ support.constant.property-value.css
+//                                    ^ punctuation.separator.sequence.css
+//                                      ^^^^^^^ support.constant.property-value.css
+
+    &.$(val) {
+//^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^^^ meta.selector.css
+//  ^ variable.language.parent.css
+//   ^ entity.other.attribute-name.class.css punctuation.definition.entity.css
+//    ^^^^^^ meta.interpolation.postcss
+//    ^^ punctuation.section.interpolation.begin.postcss
+//      ^^^ variable.other.postcss
+//         ^ punctuation.section.interpolation.end.postcss
+//           ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+
+        background-color: var(--$(val));
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//      ^^^^^^^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//                      ^ punctuation.separator.key-value.css
+//                       ^^^^^^^^^^^^^^ meta.property-value.css
+//                        ^^^ meta.function-call.identifier.css support.function.var.css
+//                           ^^^^^^^^^^ meta.function-call.arguments.css meta.group.css
+//                           ^ punctuation.section.group.begin.css
+//                            ^^^^^^^^ variable.other.custom-property.css
+//                              ^^^^^^ meta.interpolation.postcss
+//                              ^^ punctuation.section.interpolation.begin.postcss
+//                                ^^^ variable.other.postcss
+//                                   ^ punctuation.section.interpolation.end.postcss
+//                                    ^ punctuation.section.group.end.css
+//                                     ^ punctuation.terminator.rule.css
+
+        $(prop)-color: "$(val)";
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//      ^^^^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//      ^^^^^^^ meta.interpolation.postcss
+//      ^^ punctuation.section.interpolation.begin.postcss
+//        ^^^^ variable.other.postcss
+//            ^ punctuation.section.interpolation.end.postcss
+//                   ^ punctuation.separator.key-value.css
+//                    ^^^^^^^^^ meta.property-value.css
+//                     ^^^^^^^^ meta.string.css
+//                     ^ string.quoted.double.css punctuation.definition.string.begin.css
+//                      ^^^^^^ meta.interpolation.postcss
+//                      ^^ punctuation.section.interpolation.begin.postcss
+//                        ^^^ variable.other.postcss
+//                           ^ punctuation.section.interpolation.end.postcss
+//                            ^ string.quoted.double.css punctuation.definition.string.end.css
+//                             ^ punctuation.terminator.rule.css
+    }
+//^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//  ^ punctuation.section.block.end.css
+}
+// <- meta.property-list.css meta.block.css punctuation.section.block.end.css
+
+.test-nested-selectors {
+    .bar { ... }
+//  ^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^^^^ entity.other.attribute-name.class.css
+//  ^ punctuation.definition.entity.css
+    #baz { ...}
+//  ^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^^^^ entity.other.attribute-name.id.css
+//  ^ punctuation.definition.entity.css
+    :has(p) { ... }
+//  ^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^ punctuation.definition.pseudo-class.css
+//   ^^^ entity.other.pseudo-class.css
+    ::backdrop { ... }
+//  ^^^^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^^ punctuation.definition.pseudo-element.css
+//    ^^^^^^^^ entity.other.pseudo-element.css
+    [lang|="zh"] { ... }
+//  ^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css meta.attribute-selector.css meta.brackets.css
+//              ^ meta.property-list.css meta.block.css meta.selector.css - meta.brackets.cs
+    * { ... }
+//  ^^ meta.property-list.css meta.block.css meta.selector.css
+    + article { ... }
+//  ^^^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^ keyword.operator.combinator.css
+    > p { ... }
+//  ^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^ keyword.operator.combinator.css
+    ~ main { ... }
+//  ^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^ keyword.operator.combinator.css
+    || main { ... }
+//  ^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^^ keyword.operator.combinator.css
+    & article { ... }
+//  ^^^^^^^^^^ meta.property-list.css meta.block.css meta.selector.css
+//  ^ variable.language.parent.css
+//    ^^^^^^^ entity.name.tag.html.css
+    article { ... }
+//  ^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^ meta.selector.css entity.name.tag.html.css, meta.property-name.css support.type.property-name.css
+}
+
+a {
+    color: white;
+//^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^ meta.property-name.css support.type.property-name.css
+//       ^ punctuation.separator.key-value.css
+//        ^^^^^^ meta.property-value.css
+//         ^^^^^ support.constant.color.w3c.standard.css
+//              ^ punctuation.terminator.rule.css
+    @phone {
+//^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^ meta.at-rule.other.postcss
+//  ^^^^^^ keyword.control.directive.postcss
+//  ^ punctuation.definition.keyword.postcss
+//         ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+        color: black;
+//^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//      ^^^^^ meta.property-name.css support.type.property-name.css
+//           ^ punctuation.separator.key-value.css
+//            ^^^^^^ meta.property-value.css
+//             ^^^^^ support.constant.color.w3c.standard.css
+//                  ^ punctuation.terminator.rule.css
+    }
+//^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//  ^ punctuation.section.block.end.css
+}
+
+/*
+ * https://github.com/postcss/postcss-mixins
+ */
+
+@define-mixin icon $name: "anonymous" {
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.mixin.postcss
+//^^^^^^^^^^^ keyword.control.directive.mixin.postcss
+//            ^^^^ entity.name.trait.mixin.postcss
+//                 ^^^^^ meta.parameter.identifier.postcss variable.parameter.postcss
+//                 ^ punctuation.definition.variable.postcss
+//                      ^ meta.parameter.postcss punctuation.separator.key-value.css
+//                       ^^^^^^^^^^^^^ meta.parameter.value.postcss
+//                        ^^^^^^^^^^^ meta.string.css string.quoted.double.css
+//                        ^ punctuation.definition.string.begin.css
+//                                  ^ punctuation.definition.string.end.css
+//                                    ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+    padding-left: 16px;
+//^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//              ^ punctuation.separator.key-value.css
+//               ^^^^^ meta.property-value.css
+//                ^^^^ meta.number.integer.decimal.css
+//                ^^ constant.numeric.value.css
+//                  ^^ constant.numeric.suffix.css
+//                    ^ punctuation.terminator.rule.css
+
+    &::after {
+//^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^^^ meta.selector.css
+//  ^ variable.language.parent.css
+//   ^^ punctuation.definition.pseudo-element.css
+//     ^^^^^ entity.other.pseudo-element.css
+//           ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+
+        background: url(/icons/$(name).png);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//      ^^^^^^^^^^ meta.property-name.css support.type.property-name.css
+//                ^ punctuation.separator.key-value.css
+//                 ^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-value.css
+//                  ^^^ meta.function-call.identifier.css support.function.url.css
+//                     ^^^^^^^^^^^^^^^^^^^^ meta.function-call.arguments.css meta.group.css
+//                     ^ punctuation.section.group.begin.css
+//                      ^^^^^^^^^^^^^^^^^^ meta.path.url.css meta.string.css
+//                      ^^^^^^^ string.unquoted.css
+//                             ^^^^^^^ meta.interpolation.postcss
+//                             ^^ punctuation.section.interpolation.begin.postcss
+//                               ^^^^ variable.other.postcss
+//                                   ^ punctuation.section.interpolation.end.postcss
+//                                    ^^^^ string.unquoted.css
+//                                        ^ punctuation.section.group.end.css
+//                                         ^ punctuation.terminator.rule.css
+    }
+//^^^ meta.property-list.css meta.block.css meta.property-list.css meta.block.css
+//  ^ punctuation.section.block.end.css
+}
+// <- meta.property-list.css meta.block.css punctuation.section.block.end.css
+
+.search {
+    @mixin icon search;
+//^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^^^^^^^^^^^^^ meta.at-rule.other.postcss
+//  ^^^^^^ keyword.control.directive.postcss
+//  ^ punctuation.definition.keyword.postcss
+//         ^^^^ entity.other.postcss
+//              ^^^^^^ support.constant.property-value.css
+//                    ^ punctuation.terminator.rule.css
+}
+
+/*
+ * https://github.com/mcattx/postcss-define-function
+ */
+
+@define-function rem($val) {
+// <- meta.at-rule.function.postcss meta.function.postcss keyword.control.directive.function.postcss punctuation.definition.keyword.postcss
+//^^^^^^^^^^^^^^ meta.at-rule.function.postcss meta.function.postcss keyword.control.directive.function.postcss
+//              ^^^^ meta.at-rule.function.postcss meta.function.identifier.postcss
+//                  ^^^^^^ meta.at-rule.function.postcss meta.function.parameters.postcss meta.group.postcss
+//                  ^ punctuation.section.group.begin.postcss
+//                   ^^^^ variable.parameter.postcss
+//                       ^ punctuation.section.group.end.css
+//                        ^ meta.at-rule.function.postcss
+//                         ^^ meta.at-rule.function.postcss meta.property-list.css meta.block.css
+//                         ^ punctuation.section.block.begin.css
+        @return $val / 640 * 10 * 1rem;
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.function.postcss meta.property-list.css meta.block.css
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.return.postcss
+//      ^^^^^^^ keyword.control.flow.return.postcss
+//      ^ punctuation.definition.keyword.postcss
+//              ^^^^ variable.other.postcss
+//              ^ punctuation.definition.variable.postcss
+//                   ^ keyword.operator.arithmetic.postcss
+//                     ^^^ meta.number.integer.decimal.css constant.numeric.value.css
+//                         ^ keyword.operator.arithmetic.postcss
+//                           ^^ meta.number.integer.decimal.css constant.numeric.value.css
+//                              ^ keyword.operator.arithmetic.postcss
+//                                ^^^^ meta.number.integer.decimal.css
+//                                ^ constant.numeric.value.css
+//                                 ^^^ constant.numeric.suffix.css
+//                                    ^ punctuation.terminator.rule.css
+    }
+//^^^ meta.at-rule.function.postcss meta.property-list.css meta.block.css
+//  ^ punctuation.section.block.end.css
+
+@callFn .foo {
+// <- meta.at-rule.function-call.postcss keyword.control.directive.postcss punctuation.definition.keyword.postcss
+//^^^^^ meta.at-rule.function-call.postcss keyword.control.directive.postcss
+//      ^^^^^ meta.selector.css
+//      ^^^^ entity.other.attribute-name.class.css
+//      ^ punctuation.definition.entity.css
+//           ^ meta.property-list.css meta.block.css punctuation.section.block.begin.css
+    height: rem(640);
+//^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//  ^^^^^^ meta.property-name.css support.type.property-name.css
+//        ^ punctuation.separator.key-value.css
+//         ^^^^^^^^^ meta.property-value.css
+//          ^^^ meta.function-call.identifier.css support.function.calc.css
+//             ^^^^^ meta.function-call.arguments.css meta.group.css
+//             ^ punctuation.section.group.begin.css
+//              ^^^ meta.number.integer.decimal.css constant.numeric.value.css
+//                 ^ punctuation.section.group.end.css
+//                  ^ punctuation.terminator.rule.css
+}
+// <- meta.property-list.css meta.block.css punctuation.section.block.end.css

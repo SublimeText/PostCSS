@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>scope</key>
+	<string>source.postcss meta.at-rule.other entity.other</string>
+	<key>settings</key>
+	<dict>
+		<key>showInIndexedReferenceList</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>

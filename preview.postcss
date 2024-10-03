@@ -1,0 +1,24 @@
+
+// Variables
+$dir:    top;
+$blue:   #056ef0;
+$column: 200px;
+
+/*
+ * Mixins
+ */
+@define-mixin icon $name: "anonymous" {
+	.menu {
+		background: url(/icons/$(name).png);
+		width: calc(4 * $column);
+		margin-$(dir): 10px;
+
+		.item {
+			@each $val in primary, success, danger, warning {
+				&.$(val) {
+					background-color: var(--$(val));
+				}
+			}
+		}
+	}
+}

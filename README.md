@@ -2,7 +2,9 @@
 
 <img src="https://postcss.github.io/postcss/logo.svg" title="Philosopher’s stone, logo of PostCSS" align="right" width="95" height="95">
 
-[PostCSS][] syntax definitions for [Sublime Text](https://www.sublimetext.com).
+[PostCSS](https://github.com/postcss/postcss) syntax definitions for [Sublime Text](https://www.sublimetext.com).
+
+![preview](preview.png)
 
 ## Installation
 
@@ -17,6 +19,7 @@ The easiest way to install is using [Package Control](https://packagecontrol.io)
 ### Manual Install
 
 1. Download appropriate [PostCSS.sublime-package](https://github.com/SublimeText/PostCSS/releases) for your Sublime Text build.
+   _A suffix (e.g. `-st4xxx`) denotes the least required ST build for the sublime-package to work._
 2. Rename it to _PostCSS.sublime-package_
 3. Copy it into _Installed Packages_ directory
 
@@ -30,12 +33,3 @@ The easiest way to install is using [Package Control](https://packagecontrol.io)
 > [!WARNING]
 >
 > Manually installed packages are not automatically updated by Package Control.
-
-## Thanks
-
-This package is based on [Syntax Highlighting for Sass] by @P233.
-
-[PostCSS]: https://github.com/postcss/postcss
-[Syntax Highlighting for Sass]: https://github.com/P233/Syntax-highlighting-for-Sass
-[SugarSS]: https://github.com/postcss/sugarss
-[Package Control]: https://packagecontrol.io/

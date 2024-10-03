@@ -1,0 +1,14 @@
+{
+    "auto_complete_triggers":
+    [
+        {"characters": ".:#@", "selector": "source.css, source.postcss"},
+        {"characters": "<", "selector": "text.html, text.xml"},
+        {"rhs_empty": true, "selector": "punctuation.accessor"}
+    ],
+
+    // Default separators except `-`
+    "word_separators": "./\\()\"':,.;<>~!@#$%^&*|+=[]{}`~?",
+
+    // Default separator and additional `-`
+    "sub_word_separators": "_-",
+}

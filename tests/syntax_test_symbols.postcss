@@ -1,0 +1,50 @@
+// SYNTAX TEST "Packages/PostCSS/PostCSS.sublime-syntax"
+
+/*
+ * https://github.com/postcss/postcss-nested
+ */
+
+    :root {
+//  @@@@@@ local-definition
+    --custom-prop: { margin: 10px }
+//  @@@@@@@@@@@@@ definition
+
+    @apply --custom-prop;
+//         @@@@@@@@@@@@@ reference
+    @apply --custom-prop;
+//         @@@@@@@@@@@@@ reference
+    }
+
+/*
+ * https://github.com/mcattx/postcss-define-function
+ */
+
+@define-function my-func($arg: red) {}
+//               @@@@@@@ definition
+
+@callFn { color: my-func(green); }
+//               @@@@@@@ reference
+
+/*
+ * https://github.com/postcss/postcss-mixins
+ */
+
+@define-mixin my-mixin $arg: red {}
+//            @@@@@@@@ definition
+
+@mixin my-mixin;
+//     @@@@@@@@ reference
+
+/*
+ * https://github.com/postcss/postcss-simple-vars
+ */
+
+  $variable: { margin: 10px }
+// @@@@@@@@ definition
+
+  button {
+//@@@@@@@ local-definition
+
+    @apply $variable;
+//          @@@@@@@@ reference
+}
