@@ -1,5 +1,5 @@
 {
-	"scope": "source.postcss - meta.property-list - support.function.name.postcss.library - variable.other.root",
+	"scope": "source.postcss - source.postcss meta.property-list - source.postcss support.function.name.postcss.library - source.postcss variable.other.root - source.postcss comment - source.postcss string",
 
 	"completions": [
 		"color: ",

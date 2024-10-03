@@ -1,5 +1,5 @@
 {
-	"scope": "source.postcss meta.property-list.css.postcss - variable.other",
+	"scope": "source.postcss meta.property-list.css.postcss - source.postcss comment - source.postcss string - source.postcss variable.other",
 
 	"completions": [
 		"absolute",
