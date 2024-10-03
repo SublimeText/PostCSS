@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright 2017 Aleks Hudochenkov <aleks@hudochenkov.com>
+Copyright 2024 Sublime Text Packages
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
