@@ -13,13 +13,6 @@ file_extensions:
 variables:
   ident_start: (?:{{nmstart}}|\$\()
 
-  # Properties and Selectors
-  property_or_selector_begin: (?={{ident_begin}}|{{selector_start}})
-  property_end: (?=[;@)}])
-
-  selector_start: '[[:alpha:].:#&*\[{{combinator_char}}]'
-  selector_end: (?=[;@(){}])
-
 contexts:
 
 ###[ CSS ]#####################################################################
@@ -31,16 +24,9 @@ contexts:
     - meta_scope: source.css.postcss
 
   stylesheet:
-    # required until ST4174 (PR #3898)
+    - meta_prepend: true
     - include: postcss-variable-definitions
     - include: postcss-variables
-    - include: comments
-    - include: property-lists
-    - include: properties-or-selectors  # lazily match properties everywhere
-    - include: at-rules
-    - include: rule-terminators
-    - include: illegal-commas
-    - include: illegal-groups
 
 ###[ CSS COMMENTS ]############################################################
 
@@ -61,7 +47,6 @@ contexts:
 
   at-other:
     - meta_prepend: true
-    # known PostCSS at rules
     - include: postcss-at-apply
     - include: postcss-at-each
     - include: postcss-at-functions
@@ -69,60 +54,15 @@ contexts:
     - include: postcss-at-return
     - include: postcss-at-other
 
-###[ CSS SELECTORS ]###########################################################
-
   properties-or-selectors:
-    # required until ST4174 (PR #3898)
-    - include: custom-properties
-    - match: '{{property_or_selector_begin}}'
-      branch_point: property-or-selector
-      branch:
-        - maybe-property
-        - selector-body
-
-  maybe-property:
-    # required until ST4174 (PR #3898)
-    - meta_include_prototype: false
-    - include: property-end
-    - include: property-identifiers
-    - match: ''
-      fail: property-or-selector
-
-  property-end:
-    # required until ST4174 (PR #3898)
-    - match: '{{property_end}}'
-      pop: 1
-
-  selector-variables:
-    # required until ST4174 (PR #3898)
+    # required until (ST4xxx PR #4052)
     - meta_prepend: true
-    - match: \&
-      scope: variable.language.parent.css
-
-###[ CSS PROPERTY LISTS ]######################################################
-
-  maybe-property-list:
-    # required until ST4174 (PR #3831)
-    - meta_include_prototype: false
-    - match: \{
-      scope: punctuation.section.block.begin.css
-      set: property-list-body
-    - include: comments
-    - include: else-pop
+    - include: custom-properties
 
   property-list-body:
-    # required until ST4174 (PR #3898)
-    - meta_scope: meta.property-list.css meta.block.css
-    - meta_include_prototype: false
-    - include: block-end
-    - include: stylesheet
-
-  illegal-commas:
-    # required until ST4174 (PR #3831)
-    - match: ','
-      scope: invalid.illegal.unexpected-token.css
-
-###[ CSS PROTOTYPES ]##########################################################
+    - meta_prepend: true
+    - include: postcss-variable-definitions
+    - include: postcss-variables
 
   function-arguments-prototype:
     - meta_prepend: true
