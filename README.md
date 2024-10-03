@@ -1,20 +1,35 @@
-# Syntax Highlighting for [PostCSS]
+# PostCSS
 
 <img src="https://postcss.github.io/postcss/logo.svg" title="Philosopher’s stone, logo of PostCSS" align="right" width="95" height="95">
 
-PostCSS syntax highlighting for Sublime Text. 
-
-* Support CSS-like syntax and [SugarSS] syntax.
-* Support for CSS custom properties `var(--variable-name)` and `--variable-name`, and dollar variables `$variable`;
-* Automatic enable syntax highlighting for `*.pcss` and `*.postcss` files (CSS-like syntax), and for `*.sss` (SugarSS);
-
-There is a lot of possible improvements can be made to this syntax, but frankly, I don't understand in syntax files much and hope for the help of the community.
+[PostCSS][] syntax definitions for [Sublime Text](https://www.sublimetext.com).
 
 ## Installation
 
-Install with [Package Control].
+### Package Control
 
-Open the Command Palette `Cmd+Shift+P` (OS X) or `Ctrl+Shift+P` (Linux/Windows) and select “Package Control: Install Package”, then search for `Syntax Highlighting for PostCSS`.
+The easiest way to install is using [Package Control](https://packagecontrol.io). It's listed as `PostCSS`.
+
+1. Open `Command Palette` using <kbd>ctrl+shift+P</kbd> or menu item `Tools → Command Palette...`
+2. Choose `Package Control: Install Package`
+3. Find `PostCSS` and hit <kbd>Enter</kbd>
+
+### Manual Install
+
+1. Download appropriate [PostCSS.sublime-package](https://github.com/SublimeText/PostCSS/releases) for your Sublime Text build.
+2. Rename it to _PostCSS.sublime-package_
+3. Copy it into _Installed Packages_ directory
+
+> [!NOTE]
+>
+> To find _Installed Packages_...
+>
+> 1. call _Menu > Preferences > Browse Packages.._
+> 2. Navigate to parent folder
+
+> [!WARNING]
+>
+> Manually installed packages are not automatically updated by Package Control.
 
 ## Thanks
 
