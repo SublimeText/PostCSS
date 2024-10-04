@@ -192,7 +192,7 @@ contexts:
     - meta_scope: meta.at-rule.apply.postcss
     - match: '{{custom_ident_begin}}'
       push: custom-property-variable-content
-    - match: \.
+    - match: \.|{{ident_begin}}
       scope: punctuation.definition.entity.css
       push: selector-class-identifier-content
     - include: values
