@@ -11,7 +11,19 @@ file_extensions:
   - postcss
 
 variables:
-  ident_start: (?:{{nmstart}}|\$\()
+
+  ## CSS
+
+  # Identifiers
+  ident_start: (?:{{nmstart}}|{{interpolation_start}})
+
+  # Foreign Tags
+  tag_name_begin: (?={{tag_name_start}})
+  tag_name_start: (?:[[:alpha:]]|{{interpolation_start}})
+
+  ## PostCSS
+
+  interpolation_start: \$\(
 
 contexts:
 
@@ -59,6 +71,14 @@ contexts:
     - meta_prepend: true
     - include: custom-properties
 
+  selector-tag-content:
+    - meta_prepend: true
+    - include: postcss-interpolations
+
+  attribute-selector-unquoted-value-content:
+    - meta_prepend: true
+    - include: postcss-string-interpolations
+
   property-list-body:
     - meta_prepend: true
     - include: postcss-variable-definitions
@@ -72,11 +92,15 @@ contexts:
     - meta_prepend: true
     - include: postcss-interpolations
 
+  line-name-content:
+    - meta_prepend: true
+    - include: postcss-string-interpolations
+
   string-content:
     - meta_prepend: true
     - include: postcss-string-interpolations
 
-  values:
+  value-prototype:
     - meta_prepend: true
     - include: postcss-variables
 
