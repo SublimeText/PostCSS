@@ -150,6 +150,86 @@ $column: 200px;
 //                   ^ punctuation.terminator.rule.css
 }
 
+$(tag) > .$(cls) > #$(id) : $(pseudo) [$(attr)=$(value)] { $(prop): $(value); grid: [$(title)] "$(sym)" $width [line$(name)];
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.selector.css
+//^^^^ entity.name.tag.other.css meta.interpolation.postcss
+//^^^ variable.other.postcss
+//   ^ punctuation.section.interpolation.end.postcss
+//     ^ keyword.operator.combinator.css
+//       ^^^^^^^ entity.other.attribute-name.class.css
+//       ^ punctuation.definition.entity.css
+//        ^^^^^^ meta.interpolation.postcss
+//        ^^ punctuation.section.interpolation.begin.postcss
+//          ^^^ variable.other.postcss
+//             ^ punctuation.section.interpolation.end.postcss
+//               ^ keyword.operator.combinator.css
+//                 ^^^^^^ entity.other.attribute-name.id.css
+//                 ^ punctuation.definition.entity.css
+//                  ^^^^^ meta.interpolation.postcss
+//                  ^^ punctuation.section.interpolation.begin.postcss
+//                    ^^ variable.other.postcss
+//                      ^ punctuation.section.interpolation.end.postcss
+//                        ^ punctuation.definition.pseudo-class.css
+//                          ^^^^^^^^^ entity.name.tag.other.css meta.interpolation.postcss
+//                          ^^ punctuation.section.interpolation.begin.postcss
+//                            ^^^^^^ variable.other.postcss
+//                                  ^ punctuation.section.interpolation.end.postcss
+//                                    ^^^^^^^^^^^^^^^^^^ meta.attribute-selector.css meta.brackets.css
+//                                    ^ punctuation.section.brackets.begin.css
+//                                     ^^^^^^^ entity.other.attribute-name.css meta.interpolation.postcss
+//                                     ^^ punctuation.section.interpolation.begin.postcss
+//                                       ^^^^ variable.other.postcss
+//                                           ^ punctuation.section.interpolation.end.postcss
+//                                            ^ keyword.operator.logical.css
+//                                             ^^^^^^^^ meta.string.css meta.interpolation.postcss
+//                                             ^^ punctuation.section.interpolation.begin.postcss
+//                                               ^^^^^ variable.other.postcss
+//                                                    ^ punctuation.section.interpolation.end.postcss
+//                                                     ^ punctuation.section.brackets.end.css
+//                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-list.css meta.block.css
+//                                                       ^ punctuation.section.block.begin.css
+//                                                         ^^^^^^^ meta.property-name.css support.type.property-name.css meta.interpolation.postcss
+//                                                         ^^ punctuation.section.interpolation.begin.postcss
+//                                                           ^^^^ variable.other.postcss
+//                                                               ^ punctuation.section.interpolation.end.postcss
+//                                                                ^ punctuation.separator.key-value.css
+//                                                                 ^^^^^^^^^ meta.property-value.css
+//                                                                  ^^^^^^^^ support.constant.property-value.css meta.interpolation.postcss
+//                                                                  ^^ punctuation.section.interpolation.begin.postcss
+//                                                                    ^^^^^ variable.other.postcss
+//                                                                         ^ punctuation.section.interpolation.end.postcss
+//                                                                          ^ punctuation.terminator.rule.css
+//                                                                            ^^^^ meta.property-name.css support.type.property-name.css
+//                                                                                ^ punctuation.separator.key-value.css
+//                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.property-value.css
+//                                                                                  ^^^^^^^^^^ meta.line-names.css meta.brackets.css
+//                                                                                  ^ punctuation.section.brackets.begin.css
+//                                                                                   ^^^^^^^^ meta.string.css meta.interpolation.postcss
+//                                                                                   ^^ punctuation.section.interpolation.begin.postcss
+//                                                                                     ^^^^^ variable.other.postcss
+//                                                                                          ^ punctuation.section.interpolation.end.postcss
+//                                                                                           ^ punctuation.section.brackets.end.css
+//                                                                                             ^^^^^^^^ meta.string.css
+//                                                                                             ^ string.quoted.double.css punctuation.definition.string.begin.css
+//                                                                                              ^^^^^^ meta.interpolation.postcss
+//                                                                                              ^^ punctuation.section.interpolation.begin.postcss
+//                                                                                                ^^^ variable.other.postcss
+//                                                                                                   ^ punctuation.section.interpolation.end.postcss
+//                                                                                                    ^ string.quoted.double.css punctuation.definition.string.end.css
+//                                                                                                      ^^^^^^ variable.other.postcss
+//                                                                                                      ^ punctuation.definition.variable.postcss
+//                                                                                                             ^^^^^^^^^^^^^ meta.line-names.css meta.brackets.css
+//                                                                                                             ^ punctuation.section.brackets.begin.css
+//                                                                                                              ^^^^^^^^^^^ meta.string.css
+//                                                                                                              ^^^^ string.unquoted.line-name.css
+//                                                                                                                  ^^^^^^^ meta.interpolation.postcss
+//                                                                                                                  ^^ punctuation.section.interpolation.begin.postcss
+//                                                                                                                    ^^^^ variable.other.postcss
+//                                                                                                                        ^ punctuation.section.interpolation.end.postcss
+//                                                                                                                         ^ punctuation.section.brackets.end.css
+//                                                                                                                          ^ punctuation.terminator.rule.css
+}
+
 /*
  * https://github.com/pascalduez/postcss-apply
  */
