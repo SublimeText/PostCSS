@@ -211,7 +211,7 @@ contexts:
     - meta_include_prototype: false
     - meta_scope: meta.at-rule.each.postcss
     - match: in{{break}}
-      scope: keyword.operator.iterator.postcss
+      scope: keyword.operator.iteration.in.postcss
     - include: values
 
 ###[ POSTCSS DEFINE-FUNCTION AT-RULE ]#########################################
