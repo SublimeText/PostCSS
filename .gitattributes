@@ -5,6 +5,7 @@
 .gitignore      export-ignore
 # development
 tests/          export-ignore
+*.cmd           export-ignore
 # other
 preview.png     export-ignore
 preview.postcss export-ignore
