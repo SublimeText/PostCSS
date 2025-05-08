@@ -3,7 +3,7 @@ name: CI Syntax Tests
 on:
   push:
     branches:
-      - 'st4152'
+      - 'master'
     tags-ignore:
       - '**'
     paths:
@@ -29,10 +29,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - build: 4152
-            default_packages: v4152
-          - build: 4169
-            default_packages: v4169
+          - build: 4180
+            default_packages: v4180
+          - build: 4192
+            default_packages: v4192
+          - build: latest
+            default_packages: master
     steps:
       - name: Checkout Default Packages
         uses: actions/checkout@v4
