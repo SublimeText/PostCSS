@@ -25,6 +25,25 @@
 //           ^ punctuation.section.interpolation.end.postcss
 
 /*
+ * import at-rules
+ */
+
+    @import "url" prefix(tw);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.css.postcss
+//  ^^^^^^^^^^^^^^^^^^^^^^^^ meta.at-rule.import.css
+//  ^^^^^^^ keyword.control.directive.css
+//  ^ punctuation.definition.keyword.css
+//          ^^^^^ meta.string.css string.quoted.double.css
+//          ^ punctuation.definition.string.begin.css
+//              ^ punctuation.definition.string.end.css
+//                ^^^^^^ variable.function.css
+//                      ^^^^ meta.function-call.arguments.css meta.group.css
+//                      ^ punctuation.section.group.begin.css
+//                       ^^ support.constant.property-value.css
+//                         ^ punctuation.section.group.end.css
+//                          ^ punctuation.terminator.rule.css
+
+/*
  * unknown at-rules
  */
 
