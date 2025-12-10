@@ -71,6 +71,14 @@ contexts:
     - include: postcss-variable-definitions
     - include: postcss-variables
 
+  at-import-body:
+    - meta_prepend: true
+    - match: (?:(?!layer|supports|url){{ident}})(?=\()
+      scope: meta.function-call.identifier.css variable.function.css
+      push:
+        - other-function-arguments-list-body
+        - function-arguments-list-begin
+
   at-other:
     - meta_prepend: true
     # known PostCSS at rules
